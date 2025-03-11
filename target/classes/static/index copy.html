@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Suite Gamification</title>
+    <script>
+        async function fetchClasses() {
+            const response = await fetch('/api/game/classes');
+            const classes = await response.json();
+            const container = document.getElementById("classes-container");
+            container.innerHTML = "";
+
+            classes.forEach(cls => {
+                const button = document.createElement("button");
+                button.innerText = cls;
+                button.onclick = () => selectClass(cls);
+                container.appendChild(button);
+            });
+        }
+
+        let selectedClass = "";
+        function selectClass(cls) {
+            selectedClass = cls;
+            document.getElementById("selected-class").innerText = "Classe selezionata: " + cls;
+        }
+
+        async function setEvoSuiteParams() {
+            const timeLimit = document.getElementById("time-limit").value;
+            if (!selectedClass || !timeLimit) {
+                alert("Seleziona una classe e imposta un tempo!");
+                return;
+            }
+            await fetch(`/api/game/setParams?className=${selectedClass}&timeLimit=${timeLimit}`, { method: "POST" });
+            alert("Parametri impostati!");
+        }
+
+        async function submitUserTest() {
+            const testCode = document.getElementById("user-test").value;
+            if (!testCode) {
+                alert("Scrivi un test!");
+                return;
+            }
+            await fetch(`/api/game/submitUserTest?className=${selectedClass}&testCode=${encodeURIComponent(testCode)}`, { method: "POST" });
+            alert("Test salvato!");
+        }
+
+        async function executeTest() {
+            document.getElementById("results").innerText = "Esecuzione in corso...";
+            const response = await fetch(`/api/game/runTests?className=${selectedClass}`, { method: "POST" });
+            const results = await response.json();
+
+            document.getElementById("results").innerHTML = `
+                <h3>Risultati per ${selectedClass}</h3>
+                <p>💡 <strong>Test Utente</strong></p>
+                <p>Mutanti Uccisi: ${results.userKilledMutants}</p>
+                <p>⚡ <strong>Test EvoSuite</strong></p>
+                <p>Mutanti Uccisi: ${results.evoKilledMutants}</p>
+            `;
+        }
+
+        window.onload = fetchClasses;
+    </script>
+</head>
+<body>
+    <h1>Test Suite Gamification</h1>
+    <div id="classes-container"><p>Caricamento classi...</p></div>
+    <h2 id="selected-class">Seleziona una classe</h2>
+    <label>Tempo EvoSuite: <input type="number" id="time-limit"></label>
+    <button onclick="setEvoSuiteParams()">Imposta Parametri</button>
+    <h3>Scrivi il tuo test</h3>
+    <textarea id="user-test" rows="5" cols="50"></textarea>
+    <button onclick="submitUserTest()">Salva Test</button>
+    <button onclick="executeTest()">Esegui Test</button>
+    <h2>Risultati:</h2>
+    <div id="results"></div>
+</body>
+</html>

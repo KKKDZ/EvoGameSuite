@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Esecuzione Test - User VS EvoSuite</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    /* Stili per l'overlay del loading */
+    #loadingOverlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.8);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+  </style>
+  <script>
+    function onSubmitExecution() {
+      var btn = document.getElementById("executeButton");
+      btn.disabled = true;
+      // Inserisce uno spinner nel pulsante
+      btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Avvio in corso...';
+      return true;
+    }
+  </script>
+</head>
+<body class="container mt-4">
+  <h1>Esecuzione Test - User VS EvoSuite</h1>
+  <div class="alert alert-info">
+    La tua test suite utente è stata salvata correttamente per la classe <strong th:text="${className}"></strong>.
+    Clicca sul pulsante qui sotto per avviare l'esecuzione dei test.
+  </div>
+  <!-- Sezione per mostrare il progresso durante l'esecuzione -->
+  <div class="mb-4">
+    <h4>Progresso EvoSuite:</h4>
+    <pre id="progressArea" class="bg-light p-3" style="height: 200px; overflow-y: scroll;">Caricamento progresso...</pre>
+  </div>
+  <form th:action="@{/game/testsuite/execute}" method="post" onsubmit="return onSubmitExecution();">
+    <input type="hidden" name="className" th:value="${className}" />
+    <button type="submit" id="executeButton" class="btn btn-primary">Avvia Test</button>
+  </form>
+
+  <script>
+    function fetchProgress() {
+      fetch('/game/progress')
+          .then(response => response.text())
+          .then(data => {
+              var progressArea = document.getElementById("progressArea");
+              progressArea.innerText = data;
+              progressArea.scrollTop = progressArea.scrollHeight;
+          })
+          .catch(error => console.error("Errore nel recupero del progresso:", error));
+    }
+    setInterval(fetchProgress, 2000);
+  </script>
+</body>
+</html>

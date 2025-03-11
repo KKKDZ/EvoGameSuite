@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>EvoGameSuite - Risultati</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body class="container mt-4">
+  <h1>Risultati del Test</h1>
+  
+  <div class="card mb-4">
+    <div class="card-header">Test Suite Utente</div>
+    <div class="card-body">
+      <p><strong>Punti:</strong> <span th:text="${result.userPoints}"></span></p>
+      <p><strong>Mutanti Uccisi:</strong> <span th:text="${result.userKilledMutants}"></span></p>
+      <p><strong>Mutanti Sopravvissuti:</strong> <span th:text="${result.userSurvivedMutants}"></span></p>
+      <p><strong>Mutanti Senza Coverage:</strong> <span th:text="${result.userNoCoverageMutants}"></span></p>
+      <p><strong>Mutation Score:</strong> <span th:text="${result.userMutationScore}"></span>%</p>
+      <p><strong>Coverage:</strong> <span th:text="${result.userCoverage}"></span>%</p>
+    </div>
+  </div>
+
+  <div class="card mb-4">
+    <div class="card-header">Test Suite EvoSuite</div>
+    <div class="card-body">
+      <p><strong>Punti:</strong> <span th:text="${result.evosuitePoints}"></span></p>
+      <p><strong>Mutanti Uccisi:</strong> <span th:text="${result.evosuiteKilledMutants}"></span></p>
+      <p><strong>Mutanti Sopravvissuti:</strong> <span th:text="${result.evosuiteSurvivedMutants}"></span></p>
+      <p><strong>Mutanti Senza Coverage:</strong> <span th:text="${result.evosuiteNoCoverageMutants}"></span></p>
+      <p><strong>Mutation Score:</strong> <span th:text="${result.evosuiteMutationScore}"></span>%</p>
+      <p><strong>Coverage:</strong> <span th:text="${result.evosuiteCoverage}"></span>%</p>
+    </div>
+  </div>
+
+  <div class="card mb-4">
+    <div class="card-header">Schema di Calcolo dei Punteggi</div>
+    <div class="card-body">
+      <ul>
+        <li>+10 punti per ogni mutante ucciso.</li>
+        <li>-1 punto per ogni mutante sopravvissuto (inclusi quelli senza coverage).</li>
+        <li>Bonus di +20 punti alla test suite con la maggiore copertura.</li>
+      </ul>
+      <p>Il punteggio finale è la somma dei punti per i mutanti e il bonus (se applicato). La test suite con il punteggio più alto è dichiarata vincitrice.</p>
+    </div>
+  </div>
+
+  <div class="alert alert-info">
+    <strong>Vincitore:</strong> <span th:text="${result.winner}"></span>
+  </div>
+  <a href="/game/start" class="btn btn-primary mt-4">Torna alla Configurazione</a>
+</body>
+</html>

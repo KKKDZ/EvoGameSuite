@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Modifica Test Suite Utente</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body class="container mt-4">
+  <h1>Test Suite Utente per la classe <span th:text="${className}"></span></h1>
+  
+  <!-- Pulsante per vedere il codice della classe -->
+  <div class="mb-3">
+    <a th:href="@{/game/code(className=${className})}" target="_blank" class="btn btn-secondary">
+      Vedi il codice di questa classe
+    </a>    
+  </div>
+  
+  <div class="card mb-4">
+    <div class="card-header">Template (non modificare)</div>
+    <div class="card-body">
+      <pre style="background-color: #f8f9fa;">[[${template}]]</pre>
+    </div>
+  </div>
+  <form th:action="@{/game/testsuite/save}" method="post">
+    <input type="hidden" name="className" th:value="${className}" />
+    <div class="form-group">
+      <label for="userTests">Inserisci i tuoi test (@Test) qui (aggiungi solo i metodi):</label>
+      <textarea name="userTests" id="userTests" rows="10" class="form-control" placeholder="Inserisci qui i tuoi test"></textarea>
+    </div>
+    <button type="submit" class="btn btn-success">Salva Test Suite e Avvia Test</button>
+  </form>
+</body>
+</html>

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>EvoGameSuite - Benvenuto e Configurazione</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script>
+    // Mappa delle configurazioni predefinite e le relative descrizioni
+    const predefinedConfigs = {
+      "Easy": "Configurazione base: nessun parametro opzionale.",
+      "Standard": "Configurazione standard: utilizza ALL assertion strategy.",
+      "Intermediate": "Configurazione intermedia: search_budget=100, global_timeout=1000, criterio BRANCH:LINE.",
+      "Hard": "Configurazione avanzata: search_budget=200, global_timeout=2000, algoritmo STEADY_STATE_GA.",
+      "Detailed": "Configurazione dettagliata: MUTATION assertion strategy, SPEA2, popolazione aumentata, criterio METHODNOEXCEPTION."
+    };
+
+    function toggleConfigFields() {
+      const configMethod = document.querySelector('input[name="configurationMethod"]:checked').value;
+      const manualFields = document.getElementById("manualFields");
+      const predefinedField = document.getElementById("predefinedField");
+      if(configMethod === "manual") {
+        manualFields.style.display = "block";
+        predefinedField.style.display = "none";
+      } else {
+        manualFields.style.display = "none";
+        predefinedField.style.display = "block";
+      }
+    }
+
+    function updatePredefinedDescription() {
+      const select = document.getElementById("predefinedConfigOption");
+      const selectedOption = select.value;
+      const desc = predefinedConfigs[selectedOption] || "";
+      document.getElementById("predefinedDesc").innerText = desc;
+    }
+
+    // Funzione per aprire il codice della classe selezionata
+    function openCode() {
+      const cls = document.getElementById("selectedClass").value;
+      window.open('/game/code?className=' + cls, '_blank');
+    }
+
+    window.onload = function() {
+      toggleConfigFields();
+      updatePredefinedDescription();
+    }
+  </script>
+</head>
+<body class="container mt-4">
+  <!-- Sezione di benvenuto ed introduzione -->
+  <div class="jumbotron">
+    <h1 class="display-4">Benvenuto in EvoGameSuite!</h1>
+    <p class="lead">Questa piattaforma gamifica la scrittura dei test mettendoti in competizione con EvoSuite.</p>
+    <hr class="my-4">
+    <p>Scrivi i tuoi test all’interno del template fornito e confronta la qualità dei tuoi test con quelli generati automaticamente.</p>
+  </div>
+
+  <!-- Form di configurazione -->
+  <h2>Configura il tuo test ed i parametri di esecuzione EvoSuite</h2>
+  <form th:action="@{/game/run}" th:object="${config}" method="post">
+    <div class="form-group">
+      <label for="selectedClass">Seleziona la classe da testare:</label>
+      <select id="selectedClass" class="form-control" th:field="*{selectedClass}">
+        <option th:each="className : ${availableClasses}" th:value="${className}" th:text="${className}"></option>
+      </select>
+    </div>
+
+    <!-- Pulsante per vedere il codice della classe selezionata -->
+    <div class="form-group">
+      <button type="button" class="btn btn-secondary" onclick="openCode()">Vedi il codice di questa classe</button>
+    </div>
+
+    <div class="form-group">
+      <label>Metodo di Configurazione:</label><br/>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" th:field="*{configurationMethod}" name="configurationMethod" value="predefined" onclick="toggleConfigFields()" checked>
+        <label class="form-check-label">Predefined</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" th:field="*{configurationMethod}" name="configurationMethod" value="manual" onclick="toggleConfigFields()">
+        <label class="form-check-label">Manual</label>
+      </div>
+    </div>
+
+    <!-- Sezione configurazione predefinita -->
+    <div id="predefinedField" class="form-group">
+      <label for="predefinedConfigOption">Configurazione Predefinita:</label>
+      <select id="predefinedConfigOption" class="form-control" th:field="*{predefinedConfigOption}" onchange="updatePredefinedDescription()">
+        <option value="Easy">Easy</option>
+        <option value="Standard">Standard</option>
+        <option value="Intermediate">Intermediate</option>
+        <option value="Hard">Hard</option>
+        <option value="Detailed">Detailed</option>
+      </select>
+      <small id="predefinedDesc" class="form-text text-muted"></small>
+    </div>
+
+    <!-- Sezione configurazione manuale -->
+    <div id="manualFields" style="display:none;">
+      <div class="form-group">
+        <label for="algorithm">Algoritmo:</label>
+        <select id="algorithm" class="form-control" th:field="*{algorithm}">
+          <option value="RANDOM_SEARCH">RANDOM_SEARCH</option>
+          <option value="STANDARD_GA">STANDARD_GA</option>
+          <option value="MONOTONIC_GA">MONOTONIC_GA</option>
+          <option value="STEADY_STATE_GA">STEADY_STATE_GA</option>
+          <option value="BREEDER_GA">BREEDER_GA</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="testCriterion">Test Criterion:</label>
+        <select id="testCriterion" class="form-control" th:field="*{testCriterion}">
+          <option value="BRANCH:LINE">BRANCH:LINE</option>
+          <option value="METHODNOEXCEPTION">METHODNOEXCEPTION</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="generationStrategy">Generation Strategy:</label>
+        <select id="generationStrategy" class="form-control" th:field="*{generationStrategy}">
+          <option value="EVOSUITE">EVOSUITE</option>
+          <option value="RANDOM">RANDOM</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="searchBudget">Search Budget (sec):</label>
+        <input type="number" id="searchBudget" class="form-control" th:field="*{searchBudget}" placeholder="E.g., 100">
+      </div>
+      <div class="form-group">
+        <label for="globalTimeout">Global Timeout (sec):</label>
+        <input type="number" id="globalTimeout" class="form-control" th:field="*{globalTimeout}" placeholder="E.g., 1000">
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Prosegui con la scrittura dei test</button>
+  </form>
+
+  <h2 class="mt-5">Progresso EvoSuite:</h2>
+  <pre id="progressArea" class="bg-light p-3" style="height: 200px; overflow-y: scroll;">Caricamento progresso...</pre>
+  <script>
+    function fetchProgress() {
+      fetch('/game/progress')
+          .then(response => response.text())
+          .then(data => {
+              var progressArea = document.getElementById("progressArea");
+              progressArea.innerText = data;
+              progressArea.scrollTop = progressArea.scrollHeight;
+          })
+          .catch(error => console.error("Errore nel recupero del progresso:", error));
+    }
+    setInterval(fetchProgress, 2000);
+  </script>
+</body>
+</html>
