@@ -26,7 +26,7 @@
 ## ⚙️ Requirements
 
 - **Java 8**
-  Ensure you have Java 8 installed *(unless you run with Docker)*. If multiple JDKs are installed, set JAVA_HOME accordingly.
+  Ensure you have Java 8 installed *(unless using Docker - the dockerfile deploys an openjdk 1.8 by default)*. If multiple JDKs are installed, set JAVA_HOME accordingly.
   
 - **Maven Wrapper**
   The project includes the Maven Wrapper (`mvnw`/`mvnw.cmd`), so you don't need a separate Maven installation.
