@@ -4,6 +4,25 @@
 
 ---
 
+# How It Works
+
+**Test Configuration:**
+  Choose a class from the available list and configure the test generation (either using predefined settings or manually).
+
+**View Source:**
+  A button allows you to view the source code of the selected class, making it easy to verify what you’re testing.
+
+**Test Execution:**
+  After configuring and writing your tests, the application runs EvoSuite and PIT, compares the mutation coverage, and assigns points based on:
+    +10 points per mutant killed
+    -1 point per mutant surviving (including those with no coverage)
+    A bonus of +20 points to the test suite with higher coverage
+
+**Results:**
+  Detailed results are shown, including mutation score and line coverage for both your tests and EvoSuite’s tests.
+  
+---
+
 ## ⚙️ Requirements
 
 - **Java 8**
@@ -50,21 +69,4 @@ If you prefer to run the project directly on your machine, make sure to set up J
 **Access the application:**
   Open your browser and navigate to http://localhost:8080/game/start
 
----
 
-# How It Works
-
-**Test Configuration:**
-  Choose a class from the available list and configure the test generation (either using predefined settings or manually).
-
-**View Source:**
-  A button allows you to view the source code of the selected class, making it easy to verify what you’re testing.
-
-**Test Execution:**
-  After configuring and writing your tests, the application runs EvoSuite and PIT, compares the mutation coverage, and assigns points based on:
-    +10 points per mutant killed
-    -1 point per mutant surviving (including those with no coverage)
-    A bonus of +20 points to the test suite with higher coverage
-
-**Results:**
-  Detailed results are shown, including mutation score and line coverage for both your tests and EvoSuite’s tests.
