@@ -18,7 +18,7 @@ public class TestSuiteService {
                 + "import org.evosuite.runtime.EvoRunner;\n"
                 + "import org.evosuite.runtime.EvoRunnerParameters;\n"
                 + "import org.junit.runner.RunWith;\n"
-                + "import examples.Stack;\n\n"
+                + "import examples.*;\n\n"
                 + "import examples_tests.evosuite_scaffolding.*;\n\n"
                 + "@RunWith(EvoRunner.class) @EvoRunnerParameters(mockJVMNonDeterminism = true, useVFS = true, useVNET = true, resetStaticState = true, separateClassLoader = true, useJEE = true)\n"
                 + "public class " + selectedClass + "_userMade extends " + selectedClass + "_ESTest_scaffolding {\n\n"
